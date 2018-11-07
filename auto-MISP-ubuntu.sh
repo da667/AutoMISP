@@ -353,9 +353,12 @@ print_good "MISP php config files modified"
 #This is gnupg stuff and actually requires user intervention. I'm opting not to do anything e-mail related -- the users will have to set up postfix on their own.
 #I've left the commands that the MISP install docs say to use for GPG key generation, etc.
 
-#mkdir /var/www/MISP/.gnupg
-#sudo -u www-data gpg --homedir /var/www/MISP/.gnupg --gen-key
-#sudo -u www-data gpg --homedir /var/www/MISP/.gnupg --export --armor YOUR-EMAIL > /var/www/MISP/app/webroot/gpg.asc
+# sudo -u www-data mkdir /var/www/MISP/.gnupg
+# sudo chmod 700 /var/www/MISP/.gnupg
+# sudo chown www-data $(tty)
+# sudo -u www-data gpg --homedir /var/www/MISP/.gnupg --gen-key
+# sudo -u www-data sh -c "gpg --homedir /var/www/MISP/.gnupg --export --armor YOUR-KEYS-EMAIL-HERE > /var/www/MISP/app/webroot/gpg.asc"
+# sudo chown $USER $(tty)
 
 ########################################
 #Resetting the file permissions for the MISP webapp - to ensure www-data has proper access.
@@ -445,6 +448,6 @@ print_notification "I highly recommend accessing your MISP instance via IP addre
 print_notification "Default credentials: admin@admin.test//admin"
 print_notification "Obviously, you'll want to change this upon login."
 print_notification "Consider deleting this script after execution! It contains your mysql root user password and misp mysql user password! Save those passwords, delete this script!"
-print_notification "Please note that if you require MISP to be able to send e-mail, Postfix and GPG configuration has been left as an exercise to the user. Commands for generating a GPG key for the MISP instance have been commented out at lines 356-358 if you wish to use them."
+print_notification "Please note that if you require MISP to be able to send e-mail, Postfix and GPG configuration has been left as an exercise to the user. Commands for generating a GPG key for the MISP instance have been commented out at lines 356-361 if you wish to use them."
 
 exit 0
