@@ -125,9 +125,9 @@ error_check 'System updates'
 #These packages are required to run MISP. The if/then statement covers installing packages for Ubuntu 18.04, and 16.04
 
 if [[ $release == "18."* ]]; then
-	print_status "Installing: vim curl gnupg-agent git redis-server zip gcc make sudo binutils openssl imagemagick memcached mcrypt python python-dev python-pip libxml2-dev libxslt1-dev zlib1g-dev mariadb-client mariadb-server apache2 apache2-doc apache2-utils apache2-suexec-pristine libapache2-mod-fcgid libapache2-mod-security2 php libapache2-mod-php php-dev php-common php-redis php-gd php-mysql php-cli php-cgi php-pear php-curl php-intl php-pspell php-recode php-sqlite3 php-tidy php-xmlrpc php-xsl php-memcache php-imagick php-gettext ntp ntpdate php-zip php-opcache php-apcu php-fpm rng-tools python3-dev python3-pip libpq5.."
+	print_status "Installing: vim curl gnupg-agent git redis-server zip gcc make sudo binutils openssl imagemagick memcached mcrypt python python-dev python-pip python-setuptools libxml2-dev libxslt1-dev zlib1g-dev mariadb-client mariadb-server apache2 apache2-doc apache2-utils apache2-suexec-pristine libapache2-mod-fcgid libapache2-mod-security2 php libapache2-mod-php php-dev php-common php-redis php-gd php-mysql php-cli php-cgi php-pear php-curl php-intl php-pspell php-recode php-sqlite3 php-tidy php-xmlrpc php-xsl php-memcache php-imagick php-gettext ntp ntpdate php-zip php-opcache php-apcu php-fpm rng-tools python3-dev python3-pip python3-setuptools libpq5.."
 	
-	declare -a packages=( vim curl gnupg-agent git redis-server zip gcc make sudo binutils openssl imagemagick memcached mcrypt python python-dev python-pip libxml2-dev libxslt1-dev zlib1g-dev mariadb-client mariadb-server apache2 apache2-doc apache2-utils apache2-suexec-pristine libapache2-mod-fcgid libapache2-mod-security2 php libapache2-mod-php php-dev php-common php-redis php-gd php-mysql php-cli php-cgi php-pear php-curl php-intl php-pspell php-recode php-sqlite3 php-tidy php-xmlrpc php-xsl php-memcache php-imagick php-gettext ntp ntpdate php-zip php-opcache php-apcu php-fpm rng-tools python3-dev python3-pip libpq5 );
+	declare -a packages=( vim curl gnupg-agent git redis-server zip gcc make sudo binutils openssl imagemagick memcached mcrypt python python-dev python-pip python-setuptools libxml2-dev libxslt1-dev zlib1g-dev mariadb-client mariadb-server apache2 apache2-doc apache2-utils apache2-suexec-pristine libapache2-mod-fcgid libapache2-mod-security2 php libapache2-mod-php php-dev php-common php-redis php-gd php-mysql php-cli php-cgi php-pear php-curl php-intl php-pspell php-recode php-sqlite3 php-tidy php-xmlrpc php-xsl php-memcache php-imagick php-gettext ntp ntpdate php-zip php-opcache php-apcu php-fpm rng-tools python3-dev python3-pip python3-setuptools libpq5 );
 	install_packages ${packages[@]}
 else
 	print_status "Installing: vim curl gnupg-agent git redis-server zip gcc make sudo binutils openssl imagemagick memcached mcrypt python python-dev python-pip libxml2-dev libxslt1-dev zlib1g-dev mariadb-client mariadb-server apache2 apache2-doc apache2-utils apache2-suexec-pristine libapache2-mod-fcgid libapache2-mod-fastcgi libapache2-modsecurity  php7.0 libapache2-mod-php php-dev php7.0-common php-redis php7.0-gd php-mysql php7.0-cli php7.0-cgi php-pear php-auth php7.0-mcrypt php7.0-curl php7.0-intl php7.0-pspell php7.0-recode php7.0-sqlite3 php7.0-tidy php7.0-xmlrpc php7.0-xsl php-memcache php-imagick php-gettext ntp ntpdate php7.0-zip php7.0-opcache php-apcu php7.0-fpm php-crypt-gpg rng-tools python3-dev python3-pip libpq5.."
@@ -353,9 +353,12 @@ print_good "MISP php config files modified"
 #This is gnupg stuff and actually requires user intervention. I'm opting not to do anything e-mail related -- the users will have to set up postfix on their own.
 #I've left the commands that the MISP install docs say to use for GPG key generation, etc.
 
-#mkdir /var/www/MISP/.gnupg
-#sudo -u www-data gpg --homedir /var/www/MISP/.gnupg --gen-key
-#sudo -u www-data gpg --homedir /var/www/MISP/.gnupg --export --armor YOUR-EMAIL > /var/www/MISP/app/webroot/gpg.asc
+# sudo -u www-data mkdir /var/www/MISP/.gnupg
+# sudo chmod 700 /var/www/MISP/.gnupg
+# sudo chown www-data $(tty)
+# sudo -u www-data gpg --homedir /var/www/MISP/.gnupg --gen-key
+# sudo -u www-data sh -c "gpg --homedir /var/www/MISP/.gnupg --export --armor YOUR-KEYS-EMAIL-HERE > /var/www/MISP/app/webroot/gpg.asc"
+# sudo chown $USER $(tty)
 
 ########################################
 #Resetting the file permissions for the MISP webapp - to ensure www-data has proper access.
@@ -445,6 +448,6 @@ print_notification "I highly recommend accessing your MISP instance via IP addre
 print_notification "Default credentials: admin@admin.test//admin"
 print_notification "Obviously, you'll want to change this upon login."
 print_notification "Consider deleting this script after execution! It contains your mysql root user password and misp mysql user password! Save those passwords, delete this script!"
-print_notification "Please note that if you require MISP to be able to send e-mail, Postfix and GPG configuration has been left as an exercise to the user. Commands for generating a GPG key for the MISP instance have been commented out at lines 356-358 if you wish to use them."
+print_notification "Please note that if you require MISP to be able to send e-mail, Postfix and GPG configuration has been left as an exercise to the user. Commands for generating a GPG key for the MISP instance have been commented out at lines 356-361 if you wish to use them."
 
 exit 0
