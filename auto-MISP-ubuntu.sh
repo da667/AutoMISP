@@ -115,6 +115,8 @@ fi
 #this is a nice little hack I found in stack exchange to suppress messages during package installation.
 
 export DEBIAN_FRONTEND=noninteractive
+# Add Universe repository
+add-apt-repository universe
 
 # System updates
 print_status "Performing apt-get update and upgrade (May take a while if this is a fresh install).."
